@@ -1,12 +1,11 @@
 <?php
 
-require_once '../config/database.php';
+require_once '../config/Database.php';
 session_start();
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 if ($action === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    
     $employee_id = trim($_POST['employee_id']);
     $name        = trim($_POST['name']);
     $department  = trim($_POST['department']);
@@ -20,41 +19,21 @@ if ($action === 'register' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    try {
-        $pdo->beginTransaction();
+    $sql_details = "INSERT INTO user_details (employee_id, name, department) VALUES ('$employee_id', '$name', '$department')";
+    
+    if ($conn->query($sql_details) === TRUE) {
+        $user_detail_id = $conn->insert_id;
 
-        $sql_details = "INSERT INTO user_details (employee_id, name, department) VALUES (:employee_id, :name, :department)";
-        $stmt_details = $pdo->prepare($sql_details);
-        $stmt_details->execute([
-            ':employee_id' => $employee_id,
-            ':name'        => $name,
-            ':department'  => $department
-        ]);
-
-        $user_detail_id = $pdo->lastInsertId();
-
-        $sql_user = "INSERT INTO users (email, password, role, employee_id) VALUES (:email, :password, :role, :employee_id_fk)";
-        $stmt_user = $pdo->prepare($sql_user);
-        $stmt_user->execute([
-            ':email'          => $email,
-            ':password'       => $hashed_password,
-            ':role'           => $role,
-            ':employee_id_fk' => $user_detail_id
-        ]);
-
-        $pdo->commit();
-
-        echo "<script>alert('Registrasi berhasil! Silakan login.'); window.location.href='../views/login.php';</script>";
-        exit;
-
-    } catch (PDOException $e) {
-        $pdo->rollBack();
+        $sql_user = "INSERT INTO users (email, password, role, employee_id) VALUES ('$email', '$hashed_password', '$role', '$user_detail_id')";
         
-        if ($e->getCode() == 23000) {
-            echo "<script>alert('Error: NIP atau Email sudah terdaftar!'); window.history.back();</script>";
+        if ($conn->query($sql_user) === TRUE) {
+            echo "<script>alert('Registrasi berhasil! Silakan login.'); window.location.href='../views/login.php';</script>";
+            exit;
         } else {
-            echo "<script>alert('Terjadi kesalahan sistem saat registrasi.'); window.history.back();</script>";
+            echo "Error pada tabel users: " . $conn->error;
         }
+    } else {
+        echo "Error pada tabel user_details: " . $conn->error;
     }
 }
 
@@ -66,21 +45,25 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Error: Semua field wajib diisi!");
     }
 
-    $sql = "SELECT u.*, ud.name FROM users u JOIN user_details ud ON u.employee_id = ud.id WHERE u.email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':email' => $email]);
-    $user = $stmt->fetch();
+    $sql = "SELECT u.*, ud.name FROM users u JOIN user_details ud ON u.employee_id = ud.id WHERE u.email = '$email'";
+    $result = $conn->query($sql);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['name'] = $user['name'];
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
-        header("Location: ../views/dashboard.php");
-        exit;
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email']  = $user['email'];
+            $_SESSION['role']   = $user['role'];
+            $_SESSION['name']   = $user['name'];
+
+            header("Location: ../views/dashboard.php");
+            exit;
+        } else {
+            echo "<script>alert('Password salah!'); window.history.back();</script>";
+        }
     } else {
-        echo "<script>alert('Email atau password salah!'); window.history.back();</script>";
+        echo "<script>alert('Email tidak terdaftar!'); window.history.back();</script>";
     }
 }
 
