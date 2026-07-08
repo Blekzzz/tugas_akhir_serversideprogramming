@@ -13,8 +13,8 @@ $html = '
     <thead>
         <tr style="background-color: #f2f2f2;">
             <th width="10%">ID</th>
-            <th width="45%">Nama Fasilitas</th>
-            <th width="45%">Lokasi</th>
+            <th width="45%">Facility Name</th>
+            <th width="45%">Location</th>
         </tr>
     </thead>
     <tbody>';

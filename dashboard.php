@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// Strict session check rule
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+}
 require_once 'config/Database.php';
 
 // Eksekusi query menggunakan driver mysqli ($conn)
@@ -20,7 +27,7 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-
+    <a href="logout.php" style="color: #dc3545; text-decoration: none; font-weight: bold;">Logout</a>
     <h2>Sistem Pelaporan Fasilitas (FixIt)</h2>
     <p>Selamat Datang di Halaman Preview Tugas Akhir Backend.</p>
 
@@ -30,8 +37,8 @@ $result = $conn->query($query);
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nama Fasilitas</th>
-                <th>Lokasi</th>
+                <th>Facility Name</th>
+                <th>Location</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +51,7 @@ $result = $conn->query($query);
                     </tr>
                 <?php endwhile; ?> <?php else: ?>
                 <tr>
-                    <td colspan="3">Tidak ada data fasilitas.</td>
+                    <td colspan="3">No Facilities Found.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
