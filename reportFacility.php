@@ -1,15 +1,12 @@
 <?php
-// Ambil library dompdf dan koneksi database dengan path yang benar
 require_once 'vendor/autoload.php';
 require_once 'config/Database.php';
 
 use Dompdf\Dompdf;
 
-// 1. Ambil data fasilitas dari database menggunakan mysqli ($conn)
 $query = "SELECT * FROM facilities";
 $result = $conn->query($query);
 
-// 2. Susun struktur HTML yang akan diubah menjadi PDF
 $html = '
 <h2 style="text-align: center; font-family: sans-serif;">LAPORAN DATA FASILITAS - FIXIT</h2>
 <table width="100%" border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-family: sans-serif;">

@@ -1,5 +1,4 @@
 <?php
-// Ambil koneksi database menggunakan path yang benar
 require_once 'config/Database.php';
 
 // Eksekusi query menggunakan driver mysqli ($conn)
