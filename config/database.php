@@ -1,27 +1,11 @@
 <?php
-    class Database {
-        protected $conn;
+$host = "127.0.0.1";
+$username = "root";
+$password = "";
+$dbname = "fixit_db";
 
-        public function __construct() {
-            $this->connect();
-        }
+$conn = new mysqli($host, $username, $password, $dbname);
 
-        protected function connect() {
-            $host = "127.0.0.1";
-            $user = "root";
-            $pass = "";
-            $db   = "fixit_db";
-            $port = 3306;
-
-            $this->conn = new mysqli($host, $user, $pass, $db, $port);
-
-            if ($this->conn->connect_error) {
-                die("Koneksi gagal: " . $this->conn->connect_error);
-            }
-        }
-
-        public function getConnection() {
-            return $this->conn;
-        }
-    }
-?>
+if ($conn->connect_error) {
+    die("Koneksi database gagal: " . $conn->connect_error);
+}

@@ -26,8 +26,8 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('employee', 'technician') NOT NULL DEFAULT 'employee',
-    employee_id INT NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES user_details(id) ON DELETE CASCADE
+    user_detail_id INT NOT NULL,
+    FOREIGN KEY (user_detail_id) REFERENCES user_details(id) ON DELETE CASCADE
 );
 
 
@@ -52,3 +52,13 @@ INSERT INTO facilities (facilites_name, location) VALUES
 ('Printer Epson L6460', 'Gedung Utama'),
 ('WiFi Router', 'Gedung Utama'),
 ('AC Kantor 2', 'Gedung Utama');
+
+INSERT INTO user_details (name, address, phone_number, birth_date, birth_place, employee_id, department) VALUES 
+('John Doe', '123 Main St', '1234567890', '1990-01-01', 'City A', 'EMP001', 'IT'),
+('Jane Smith', '456 Elm St', '0987654321', '1985-05-15', 'City B', 'EMP002', 'HR'),
+('Mike Johnson', '789 Oak St', '5555555555', '1992-07-20', 'City C', 'EMP003', 'Finance');
+
+INSERT INTO users (email, password, role, user_detail_id) VALUES 
+('johndoe@gmail.com', 'password123', 'employee', 1),
+('janesmith@gmail.com', 'password123', 'employee', 2),
+('mikejohnson@gmail.com', 'password123', 'employee', 3);
