@@ -35,3 +35,10 @@ CREATE TABLE tickets (
     FOREIGN KEY (facilities_id) REFERENCES facilities(id),
     FOREIGN KEY (technician_id) REFERENCES users(id)
 );
+
+INSERT INTO facilities (facilites_name, location) VALUES 
+('Air Conditioner (AC) - Room 101', '1st Floor - Main Office'),
+('Projector Sony', '2nd Floor - Meeting Room B'),
+('Photocopy Machine', '1st Floor - Administration Room'),
+('Water Dispenser', '3rd Floor - Employee Lounge'),
+('WiFi Router TP-Link', '2nd Floor - Hallway');
