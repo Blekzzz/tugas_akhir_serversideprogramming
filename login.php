@@ -2,6 +2,12 @@
 include 'config/Database.php';
 session_start();
 
+// AUTHENTICATION GUARD: If already logged in, redirect to dashboard
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];

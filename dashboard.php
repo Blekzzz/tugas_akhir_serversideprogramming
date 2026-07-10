@@ -12,7 +12,6 @@ $user_id = $_SESSION['user_id'];
 $role = $_SESSION['role'];
 $fullname = $_SESSION['fullname'];
 
-// Handle Employee Form Submission (Creating a Ticket)
 if ($role == 'employee' && isset($_POST['submit_ticket'])) {
     $facilities_id = $_POST['facilities_id'];
     $issue_description = $_POST['issue_description'];
@@ -27,7 +26,6 @@ if ($role == 'employee' && isset($_POST['submit_ticket'])) {
     }
 }
 
-// Handle Technician Action (Updating Ticket Status)
 if ($role == 'technician' && isset($_POST['update_status'])) {
     $ticket_id = $_POST['ticket_id'];
     $new_status = $_POST['new_status'];
@@ -52,7 +50,12 @@ if ($role == 'technician' && isset($_POST['update_status'])) {
     <hr>
     <p>Welcome, <strong><?php echo $fullname; ?></strong>!</p>
     <p>You are logged in as: <strong><?php echo ucfirst($role); ?></strong></p>
-    <p><a href="logout.php">Log Out</a></p>
+    
+    <p>
+        <a href="editProfile.php">[ Edit Profile ]</a> | 
+        <a href="changePassword.php">[ Change Password ]</a> | 
+        <a href="logout.php">[ Log Out ]</a>
+    </p>
     <hr>
 
     <?php if ($role == 'employee'): ?>

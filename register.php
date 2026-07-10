@@ -1,14 +1,19 @@
 <?php
 include 'config/Database.php';
+session_start();
+
+// AUTHENTICATION GUARD: If already logged in, redirect to dashboard
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
 
 if (isset($_POST['register'])) {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
-    // Securing the password using bcrypt
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = $_POST['role']; // Getting the selected role from the form
+    $role = $_POST['role'];
 
-    // Inserting registration data including the chosen role
     $query = "INSERT INTO users (fullname, email, password, role) 
               VALUES ('$fullname', '$email', '$password', '$role')";
 
